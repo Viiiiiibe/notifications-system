@@ -1,0 +1,38 @@
+{% load i18n %}
+<div class="admin-filter">
+    <h3>{{ title }}</h3>
+    <div style="padding: 10px; ; margin-bottom: 10px;">
+        <input
+            type="text"
+            id="{{ spec.parameter_name }}_input"
+            value="{{ spec.value|default_if_none:'' }}"
+            placeholder="Введите {{ title|lower }}..."
+            style="width: 90%; padding: 4px; margin-bottom: 5px;"
+        >
+        <button type="button" onclick="applyTextFilter('{{ spec.parameter_name }}')"
+                style="padding: 4px 8px;">Применить</button>
+    </div>
+</div>
+
+<script>
+function applyTextFilter(paramName) {
+    const input = document.getElementById(paramName + '_input');
+    const value = input.value;
+
+    // Создаем новый URL
+    const url = new URL(window.location);
+
+    // Обновляем или добавляем параметр
+    if (value) {
+        url.searchParams.set(paramName, value);
+    } else {
+        url.searchParams.delete(paramName);
+    }
+
+    // Удаляем параметр пагинации
+    url.searchParams.delete('page');
+
+    // Перезагружаем страницу с новыми параметрами
+    window.location.href = url.toString();
+}
+</script>
